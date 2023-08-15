@@ -1,0 +1,97 @@
+{
+  "Files": [
+    {
+      "Id": "C:\\Users\\Corei3_21\\Documents\\practica\\BlazingSushi\\BlazingSushi\\Client\\bin\\Debug\\net7.0\\wwwroot\\_framework\\blazor.webassembly.js",
+      "PackagePath": "staticwebassets\\_framework\\blazor.webassembly.js"
+    },
+    {
+      "Id": "C:\\Users\\Corei3_21\\Documents\\practica\\BlazingSushi\\BlazingSushi\\Client\\obj\\Debug\\net7.0\\build-gz\\IO81ufAE.gz",
+      "PackagePath": "staticwebassets\\_framework\\blazor.webassembly.js.gz"
+    },
+    {
+      "Id": "C:\\Users\\Corei3_21\\Documents\\practica\\BlazingSushi\\BlazingSushi\\Client\\obj\\Debug\\net7.0\\scopedcss\\bundle\\BlazingSushi.Client.styles.css",
+      "PackagePath": "staticwebassets\\BlazingSushi.Client.styles.css"
+    },
+    {
+      "Id": "C:\\Users\\Corei3_21\\Documents\\practica\\BlazingSushi\\BlazingSushi\\Client\\wwwroot\\css\\app.css",
+      "PackagePath": "staticwebassets\\css\\app.css"
+    },
+    {
+      "Id": "C:\\Users\\Corei3_21\\Documents\\practica\\BlazingSushi\\BlazingSushi\\Client\\wwwroot\\css\\bootstrap\\bootstrap.min.css",
+      "PackagePath": "staticwebassets\\css\\bootstrap\\bootstrap.min.css"
+    },
+    {
+      "Id": "C:\\Users\\Corei3_21\\Documents\\practica\\BlazingSushi\\BlazingSushi\\Client\\wwwroot\\css\\bootstrap\\bootstrap.min.css.map",
+      "PackagePath": "staticwebassets\\css\\bootstrap\\bootstrap.min.css.map"
+    },
+    {
+      "Id": "C:\\Users\\Corei3_21\\Documents\\practica\\BlazingSushi\\BlazingSushi\\Client\\wwwroot\\css\\font\\quicksand-v8-latin-300.woff",
+      "PackagePath": "staticwebassets\\css\\font\\quicksand-v8-latin-300.woff"
+    },
+    {
+      "Id": "C:\\Users\\Corei3_21\\Documents\\practica\\BlazingSushi\\BlazingSushi\\Client\\wwwroot\\css\\font\\quicksand-v8-latin-300.woff2",
+      "PackagePath": "staticwebassets\\css\\font\\quicksand-v8-latin-300.woff2"
+    },
+    {
+      "Id": "C:\\Users\\Corei3_21\\Documents\\practica\\BlazingSushi\\BlazingSushi\\Client\\wwwroot\\css\\font\\quicksand-v8-latin-500.woff",
+      "PackagePath": "staticwebassets\\css\\font\\quicksand-v8-latin-500.woff"
+    },
+    {
+      "Id": "C:\\Users\\Corei3_21\\Documents\\practica\\BlazingSushi\\BlazingSushi\\Client\\wwwroot\\css\\font\\quicksand-v8-latin-500.woff2",
+      "PackagePath": "staticwebassets\\css\\font\\quicksand-v8-latin-500.woff2"
+    },
+    {
+      "Id": "C:\\Users\\Corei3_21\\Documents\\practica\\BlazingSushi\\BlazingSushi\\Client\\wwwroot\\css\\font\\quicksand-v8-latin-700.woff",
+      "PackagePath": "staticwebassets\\css\\font\\quicksand-v8-latin-700.woff"
+    },
+    {
+      "Id": "C:\\Users\\Corei3_21\\Documents\\practica\\BlazingSushi\\BlazingSushi\\Client\\wwwroot\\css\\font\\quicksand-v8-latin-700.woff2",
+      "PackagePath": "staticwebassets\\css\\font\\quicksand-v8-latin-700.woff2"
+    },
+    {
+      "Id": "C:\\Users\\Corei3_21\\Documents\\practica\\BlazingSushi\\BlazingSushi\\Client\\wwwroot\\css\\font\\quicksand-v8-latin-regular.woff",
+      "PackagePath": "staticwebassets\\css\\font\\quicksand-v8-latin-regular.woff"
+    },
+    {
+      "Id": "C:\\Users\\Corei3_21\\Documents\\practica\\BlazingSushi\\BlazingSushi\\Client\\wwwroot\\css\\font\\quicksand-v8-latin-regular.woff2",
+      "PackagePath": "staticwebassets\\css\\font\\quicksand-v8-latin-regular.woff2"
+    },
+    {
+      "Id": "C:\\Users\\Corei3_21\\Documents\\practica\\BlazingSushi\\BlazingSushi\\Client\\wwwroot\\css\\font\\quicksand.css",
+      "PackagePath": "staticwebassets\\css\\font\\quicksand.css"
+    },
+    {
+      "Id": "C:\\Users\\Corei3_21\\Documents\\practica\\BlazingSushi\\BlazingSushi\\Client\\wwwroot\\favicon.png",
+      "PackagePath": "staticwebassets\\favicon.png"
+    },
+    {
+      "Id": "C:\\Users\\Corei3_21\\Documents\\practica\\BlazingSushi\\BlazingSushi\\Client\\wwwroot\\icon-192.png",
+      "PackagePath": "staticwebassets\\icon-192.png"
+    },
+    {
+      "Id": "C:\\Users\\Corei3_21\\Documents\\practica\\BlazingSushi\\BlazingSushi\\Client\\wwwroot\\images\\sushi.png",
+      "PackagePath": "staticwebassets\\images\\sushi.png"
+    },
+    {
+      "Id": "C:\\Users\\Corei3_21\\Documents\\practica\\BlazingSushi\\BlazingSushi\\Client\\wwwroot\\index.html",
+      "PackagePath": "staticwebassets\\index.html"
+    },
+    {
+      "Id": "obj\\Debug\\net7.0\\staticwebassets\\msbuild.BlazingSushi.Client.Microsoft.AspNetCore.StaticWebAssets.props",
+      "PackagePath": "build\\Microsoft.AspNetCore.StaticWebAssets.props"
+    },
+    {
+      "Id": "obj\\Debug\\net7.0\\staticwebassets\\msbuild.build.BlazingSushi.Client.props",
+      "PackagePath": "build\\BlazingSushi.Client.props"
+    },
+    {
+      "Id": "obj\\Debug\\net7.0\\staticwebassets\\msbuild.buildMultiTargeting.BlazingSushi.Client.props",
+      "PackagePath": "buildMultiTargeting\\BlazingSushi.Client.props"
+    },
+    {
+      "Id": "obj\\Debug\\net7.0\\staticwebassets\\msbuild.buildTransitive.BlazingSushi.Client.props",
+      "PackagePath": "buildTransitive\\BlazingSushi.Client.props"
+    }
+  ],
+  "ElementsToRemove": []
+}

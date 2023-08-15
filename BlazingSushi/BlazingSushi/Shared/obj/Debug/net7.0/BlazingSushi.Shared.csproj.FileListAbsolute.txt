@@ -1,0 +1,12 @@
+C:\Users\Corei3_21\Documents\practica\BlazingSushi\BlazingSushi\Shared\bin\Debug\net7.0\BlazingSushi.Shared.deps.json
+C:\Users\Corei3_21\Documents\practica\BlazingSushi\BlazingSushi\Shared\bin\Debug\net7.0\BlazingSushi.Shared.dll
+C:\Users\Corei3_21\Documents\practica\BlazingSushi\BlazingSushi\Shared\bin\Debug\net7.0\BlazingSushi.Shared.pdb
+C:\Users\Corei3_21\Documents\practica\BlazingSushi\BlazingSushi\Shared\obj\Debug\net7.0\BlazingSushi.Shared.csproj.AssemblyReference.cache
+C:\Users\Corei3_21\Documents\practica\BlazingSushi\BlazingSushi\Shared\obj\Debug\net7.0\BlazingSushi.Shared.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Corei3_21\Documents\practica\BlazingSushi\BlazingSushi\Shared\obj\Debug\net7.0\BlazingSushi.Shared.AssemblyInfoInputs.cache
+C:\Users\Corei3_21\Documents\practica\BlazingSushi\BlazingSushi\Shared\obj\Debug\net7.0\BlazingSushi.Shared.AssemblyInfo.cs
+C:\Users\Corei3_21\Documents\practica\BlazingSushi\BlazingSushi\Shared\obj\Debug\net7.0\BlazingSushi.Shared.csproj.CoreCompileInputs.cache
+C:\Users\Corei3_21\Documents\practica\BlazingSushi\BlazingSushi\Shared\obj\Debug\net7.0\BlazingSushi.Shared.dll
+C:\Users\Corei3_21\Documents\practica\BlazingSushi\BlazingSushi\Shared\obj\Debug\net7.0\refint\BlazingSushi.Shared.dll
+C:\Users\Corei3_21\Documents\practica\BlazingSushi\BlazingSushi\Shared\obj\Debug\net7.0\BlazingSushi.Shared.pdb
+C:\Users\Corei3_21\Documents\practica\BlazingSushi\BlazingSushi\Shared\obj\Debug\net7.0\ref\BlazingSushi.Shared.dll

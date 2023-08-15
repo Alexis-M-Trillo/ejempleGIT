@@ -1,0 +1,448 @@
+Basado en toda la informaciondada mi objetivo es El objetivo de este caso de estudio sobre el COVID-19 es determinar si la neumonía es un factor de riesgo para la infección por COVID-19. Para abordar este análisis, se requiere que sea capaz de predecir la presencia de neumonía en función de variables como el sexo, el tabaquismo y la clasificación final de la enfermedad. Este enfoque es apropiado dado que se cuenta con una variable objetivo (neumonía) y se busca encontrar patrones en los datos que puedan ayudar a predecir dicha variable. Nesesito hacer el analisis no supervisado en weka, que algoritmo me recomiendas utilizar, solo necesito 1 y necesito el que mejor se adapte.
+
+escribe un codigo en python sobre hacer un analisis no supervisado don el algoritmo de SimpleKMeans en función de las características proporcionadas ('SEXO', 'NEUMONIA', 'TABAQUISMO' y 'CLASIFICACION_FINAL') El objetivo de este caso de estudio sobre el COVID-19 es determinar si la neumonía es un factor de riesgo para la infección por COVID-19. Para abordar este análisis, se requiere que sea capaz de predecir la presencia de neumonía en función de variables como el sexo, el tabaquismo y la clasificación final de la enfermedad. Este enfoque es apropiado dado que se cuenta con una variable objetivo (neumonía) y se busca encontrar patrones en los datos que puedan ayudar a predecir dicha variable.
+
+import pandas as pd
+from sklearn.model_selection import train_test_split, cross_val_score
+from sklearn.linear_model import LogisticRegression
+from sklearn.preprocessing import LabelEncoder, MinMaxScaler
+
+# Leer los datos y preparar los predictores y la variable objetivo
+dfmorelos = pd.read_csv(path + "dbmorelos2.csv", encoding='latin1', low_memory=False)
+dfmorelos = dfmorelos.drop(['FECHA_ACTUALIZACION', 'ID_REGISTRO', 'ORIGEN', 'SECTOR', 'ENTIDAD_UM','ENTIDAD_NAC', 'ENTIDAD_RES', 'MUNICIPIO_RES', 'TIPO_PACIENTE', 'FECHA_INGRESO', 'FECHA_SINTOMAS', 'FECHA_DEF', 'INTUBADO', 'EDAD', 'NACIONALIDAD', 'EMBARAZO', 'HABLA_LENGUA_INDIG', 'INDIGENA', 'DIABETES', 'EPOC', 'ASMA', 'INMUSUPR', 'HIPERTENSION', 'OTRA_COM', 'CARDIOVASCULAR', 'OBESIDAD', 'RENAL_CRONICA', 'OTRO_CASO', 'TOMA_MUESTRA_LAB', 'RESULTADO_LAB', 'TOMA_MUESTRA_ANTIGENO', 'RESULTADO_ANTIGENO', 'MIGRANTE', 'PAIS_NACIONALIDAD', 'PAIS_ORIGEN', 'UCI'], axis=1)
+
+
+# Preprocesar los datos
+predictores = [ 'SEXO', 'TABAQUISMO', 'CLASIFICACION_FINAL']
+X = dfmorelos[predictores]
+y = dfmorelos['NEUMONIA']
+
+le = LabelEncoder()
+X.loc[:, 'SEXO'] = le.fit_transform(X['SEXO'])
+X.loc[:, 'TABAQUISMO'] = le.fit_transform(X['TABAQUISMO'])
+X.loc[:, 'CLASIFICACION_FINAL'] = le.fit_transform(X['CLASIFICACION_FINAL'])
+
+# Dividir el conjunto de datos en entrenamiento y prueba
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.25, random_state=0)
+
+# Escalar los datos
+scaler = MinMaxScaler()
+X_train_scaled = scaler.fit_transform(X_train)
+X_test_scaled = scaler.transform(X_test)
+
+# Crear el modelo de Regresión Logística
+logreg = LogisticRegression(random_state=0, max_iter=1000)
+
+# Realizar la validación cruzada
+scores = cross_val_score(logreg, X_train_scaled, y_train, cv=5)
+
+# Imprimir los resultados de la validación cruzada
+print('Precisión promedio en validación cruzada: {:.2f}'.format(scores.mean()))
+
+# Ajustar el modelo a los datos de entrenamiento
+logreg.fit(X_train_scaled, y_train)
+
+# Calcular la precisión en el conjunto de prueba
+test_accuracy = logreg.score(X_test_scaled, y_test)
+print('Precisión en el conjunto de prueba: {:.2f}'.format(test_accuracy))
+
+-----------------------------------------------
+como puedo optimizar el siguiente codigo para que me de cuanta precision tiene el cluster generado y que me de mas informacion con respecto si esta bien generado el analisis:
+
+import pandas as pde
+from sklearn.preprocessing import LabelEncoder, MinMaxScaler
+from sklearn.cluster import KMeans
+
+# Leer los datos y preparar los predictores y la variable objetivo
+dfmorelos = pd.read_csv(path + "dbmorelos2.csv", encoding='latin1', low_memory=False)
+
+# Filtrar y limpiar los datos para considerar solo los valores válidos para NEUMONIA y TABAQUISMO
+dfmorelos = dfmorelos[dfmorelos['NEUMONIA'].isin([1, 2])]
+dfmorelos = dfmorelos[dfmorelos['TABAQUISMO'].isin([1, 2])]
+
+# Preprocesar los datos
+predictores = ['SEXO', 'TABAQUISMO', 'CLASIFICACION_FINAL', 'NEUMONIA']
+X = dfmorelos[predictores]
+
+print("Longitud de datos preprocesados:", len(X))
+
+# Transformar las variables categóricas a numéricas
+le = LabelEncoder()
+X.loc[:, 'SEXO'] = le.fit_transform(X['SEXO'])
+X.loc[:, 'TABAQUISMO'] = le.fit_transform(X['TABAQUISMO'])
+X.loc[:, 'CLASIFICACION_FINAL'] = le.fit_transform(X['CLASIFICACION_FINAL'])
+X.loc[:, 'NEUMONIA'] = le.fit_transform(X['NEUMONIA'])
+
+# Escalar los datos
+scaler = MinMaxScaler()
+X_scaled = scaler.fit_transform(X)
+
+# Crear el modelo de KMeans con 2 clusters (neumonía o no neumonía)
+kmeans = KMeans(n_clusters=2, random_state=0)
+
+# Ajustar el modelo a los datos
+kmeans.fit(X_scaled)
+
+# Obtener las etiquetas de los clusters asignados a cada muestra
+cluster_labels = kmeans.labels_
+
+print("Longitud de etiquetas de clusters:", len(cluster_labels))
+
+# Revisar si hay diferencias en el índice de los DataFrames
+print("Diferencia en el índice de los DataFrames:", X.index.difference(dfmorelos.index))
+
+# Restablecer el índice de 'dfmorelos'
+dfmorelos.reset_index(drop=True, inplace=True)
+
+# Agregar las etiquetas de los clusters al DataFrame original
+dfmorelos['Cluster'] = cluster_labels
+
+# Ver los resultados de los clusters
+print(dfmorelos[['NEUMONIA', 'TABAQUISMO', 'Cluster']].head(10))
+
+# Si es necesario, analizar las características de cada cluster para interpretar los resultados
+cluster_0 = dfmorelos[dfmorelos['Cluster'] == 0][['SEXO', 'TABAQUISMO', 'CLASIFICACION_FINAL', 'NEUMONIA']]
+cluster_1 = dfmorelos[dfmorelos['Cluster'] == 1][['SEXO', 'TABAQUISMO', 'CLASIFICACION_FINAL', 'NEUMONIA']]
+
+print("Características del Cluster 0:")
+print(cluster_0.describe())
+
+print("Características del Cluster 1:")
+print(cluster_1.describe())
+
+
+-------------------------------------------------------------
+El objetivo de este caso de estudio sobre el COVID-19 es determinar si la neumonía es un factor de riesgo para la infección por COVID-19. Para abordar este análisis, se requiere que sea capaz de predecir la presencia de neumonía en función de variables como el sexo, el tabaquismo y la clasificación final de la enfermedad. Este enfoque es apropiado dado que se cuenta con una variable objetivo (neumonía) y se busca encontrar patrones en los datos que puedan ayudar a predecir dicha variable.
+
+Yo utilice el algoritmo SimpleKMeans con la siguiente configuracion:
+canopyMaxNumCanopiesToHoldinMemory=100
+canopyMinimumCanopyDensity=2.0
+canopyPeriodicPruningRate=10000
+сапоруТ1=-1.25
+сапоруТ2=-1.0
+debug=False
+displayStdDevs= False
+distanceFunction=EuclideanDistance -R first-last
+doNotCheckCapabilities=False
+dontReplaceMissingValues=False
+fastDistanceCalc False
+initializationMethod=Random
+maxiterations=500
+numClusters=6
+numExecutionSlots=1
+preservelnstancesOrder=False
+reduceNumberODistanceCalcsViaCanopies=False
+seed=10
+
+y me dio los siguientres resultados:
+=== Run information ===
+
+Scheme:       weka.clusterers.SimpleKMeans -init 0 -max-candidates 100 -periodic-pruning 10000 -min-density 2.0 -t1 -1.25 -t2 -1.0 -N 6 -A "weka.core.EuclideanDistance -R first-last" -I 500 -num-slots 1 -S 10
+Relation:     Morelos_modificado3_completo_sin_asento-weka.filters.unsupervised.attribute.Remove-R1-5,7-14,16-29,31-35,37-40
+Instances:    347886
+Attributes:   4
+              SEXO
+              NEUMONIA
+              TABAQUISMO
+              CLASIFICACION_FINAL
+Test mode:    evaluate on training data
+
+
+=== Clustering model (full training set) ===
+
+
+kMeans
+======
+
+Number of iterations: 3
+Within cluster sum of squared errors: 64430.0
+
+Initial starting points (random):
+
+Cluster 0: Masculino,NO,NO,'NEGATIVO A SARS-COV-2'
+Cluster 1: Femenino,NO,SI,'CASO DE SARS-COV-2  CONFIRMADO'
+Cluster 2: Masculino,SI,NO,'CASO DE SARS-COV-2  CONFIRMADO'
+Cluster 3: Femenino,NO,NO,'NEGATIVO A SARS-COV-2'
+Cluster 4: Masculino,NO,SI,'CASO DE SARS-COV-2  CONFIRMADO'
+Cluster 5: Femenino,NO,NO,'CASO DE SARS-COV-2  CONFIRMADO'
+
+Missing values globally replaced with mean/mode
+
+Final cluster centroids:
+                                                                                                                          Cluster#
+Attribute                                                                                 Full Data                              0                              1                              2                              3                              4                              5
+                                                                                         (347886.0)                     (149858.0)                       (6158.0)                      (11342.0)                     (142986.0)                       (2858.0)                      (34684.0)
+=============================================================================================================================================================================================================================================================================================
+SEXO                                                                                       Femenino                      Masculino                       Femenino                      Masculino                       Femenino                      Masculino                       Femenino
+NEUMONIA                                                                                         NO                             NO                             NO                             SI                             NO                             NO                             NO
+TABAQUISMO                                                                                       NO                             NO                             SI                             NO                             NO                             SI                             NO
+CLASIFICACION_FINAL                                                           NEGATIVO A SARS-COV-2          NEGATIVO A SARS-COV-2          NEGATIVO A SARS-COV-2 CASO DE SARS-COV-2  CONFIRMADO          NEGATIVO A SARS-COV-2 CASO DE SARS-COV-2  CONFIRMADO CASO DE SARS-COV-2  CONFIRMADO
+
+
+
+
+Time taken to build model (full training data) : 0.56 seconds
+
+=== Model and evaluation on training set ===
+
+Clustered Instances
+
+0      149858 ( 43%)
+1        6158 (  2%)
+2       11342 (  3%)
+3      142986 ( 41%)
+4        2858 (  1%)
+5       34684 ( 10%)
+
+Analisis de la grafica:
+parametros:
+
+x= cluster
+y=neumonia
+colour= Cluster 
+
+Cluster0: el principal fuerte fue que el 'no', tiene mas instancias pero el 'no especificado' tiene muy pocas y disperso, el 'si' esta en un nivel medio pero concentrado.
+
+Cluster1: el 'no' tiene un nivel medio pero dispero que se junta con el cluster0, el 'no especificado' cuenta con muy pero muy pocas instancias, el 'si' cuenta con pocas y diespersas instancias.
+
+Cluster2: el 'no' no tiene instacias, el 'no especificado' tiene muy pocas y diespersas, el 'si' tiene un nivel medio de intancias y concentrdas y esta pegado al cluster1 y 3.
+
+Cluster3: el 'no' tiene una gran coantidad de instancias y consentrdas se ensima al cluster2, el 'no especificado' tiene muy pocas instancias y disperdas, el 'si' tiene pocas instancias y se sobrepone un poco al cluster2.
+
+Cluster4: el 'no' tiene muy pocas instancias y estan dispersas pero se sobrepone al cluster 3 y 5, el 'no especificado' tienen muy pero muy pocas instancias, el 'si'  no cuenta con instancias.
+
+Cluster5: el 'no' tiene un nivel medio de intacnias concentradas, el 'no especificado' tienen muy pero muy pocas instancias, el 'si'  no cuenta con instancias.
+
+Dame una insterpretacion de esto datos, nostas algun patron, a que conclusion llegas tomando encuenta los datos tomando en ceunta que estamos en weka
+
+------------------------------------------------------------------------
+
+En el siguiente codigo solo toma en 
+NEUMONIA
+CLAVE	DESCRIPCIÓN
+1	SI 
+2	NO 
+
+y
+
+TABAQUISMO
+CLAVE	DESCRIPCIÓN
+1	SI 
+2	NO 
+
+import pandas as pd
+from sklearn.preprocessing import LabelEncoder, MinMaxScaler
+from sklearn.cluster import KMeans
+
+# Leer los datos y preparar los predictores y la variable objetivo
+dfmorelos = pd.read_csv(path + "dbmorelos2.csv", encoding='latin1', low_memory=False)
+dfmorelos = dfmorelos.drop(['FECHA_ACTUALIZACION', 'ID_REGISTRO', 'ORIGEN', 'SECTOR', 'ENTIDAD_UM', 'ENTIDAD_NAC', 'ENTIDAD_RES', 'MUNICIPIO_RES', 'TIPO_PACIENTE', 'FECHA_INGRESO', 'FECHA_SINTOMAS', 'FECHA_DEF', 'INTUBADO', 'EDAD', 'NACIONALIDAD', 'EMBARAZO', 'HABLA_LENGUA_INDIG', 'INDIGENA', 'DIABETES', 'EPOC', 'ASMA', 'INMUSUPR', 'HIPERTENSION', 'OTRA_COM', 'CARDIOVASCULAR', 'OBESIDAD', 'RENAL_CRONICA', 'OTRO_CASO', 'TOMA_MUESTRA_LAB', 'RESULTADO_LAB', 'TOMA_MUESTRA_ANTIGENO', 'RESULTADO_ANTIGENO', 'MIGRANTE', 'PAIS_NACIONALIDAD', 'PAIS_ORIGEN', 'UCI'], axis=1)
+
+# Preprocesar los datos
+predictores = ['SEXO', 'TABAQUISMO', 'CLASIFICACION_FINAL']
+X = dfmorelos[predictores]
+
+le = LabelEncoder()
+X.loc[:, 'SEXO'] = le.fit_transform(X['SEXO'])
+X.loc[:, 'TABAQUISMO'] = le.fit_transform(X['TABAQUISMO'])
+X.loc[:, 'CLASIFICACION_FINAL'] = le.fit_transform(X['CLASIFICACION_FINAL'])
+
+# Escalar los datos
+scaler = MinMaxScaler()
+X_scaled = scaler.fit_transform(X)
+
+# Crear el modelo de KMeans con 2 clusters (neumonía o no neumonía)
+kmeans = KMeans(n_clusters=2, random_state=0)
+
+# Ajustar el modelo a los datos
+kmeans.fit(X_scaled)
+
+# Obtener las etiquetas de los clusters asignados a cada muestra
+cluster_labels = kmeans.labels_
+
+# Agregar los resultados al DataFrame original
+dfmorelos['Cluster'] = cluster_labels
+
+# Ver los resultados de los clusters
+print(dfmorelos[['NEUMONIA', 'Cluster']].head(10))
+
+# Si es necesario, analizar las características de cada cluster para interpretar los resultados
+cluster_0 = dfmorelos[dfmorelos['Cluster'] == 0]
+cluster_1 = dfmorelos[dfmorelos['Cluster'] == 1]
+
+print("Características del Cluster 0:")
+print(cluster_0.describe())
+
+print("Características del Cluster 1:")
+print(cluster_1.describe())
+
+
+----------------------------------------------------------------------------
+comprueba los dos resultados para ver si se realizo una optimizacion correcta
+
+resultado 1:
+=== Run information ===
+
+Scheme:       weka.clusterers.SimpleKMeans -init 1 -max-candidates 100 -periodic-pruning 10000 -min-density 2.0 -t1 -1.25 -t2 -1.0 -N 15 -A "weka.core.EuclideanDistance -R first-last" -I 500 -num-slots 1 -S 20
+Relation:     Morelos_modificado3_completo_sin_asento-weka.filters.unsupervised.attribute.Remove-R1-5,7-14,16-20,24,26-27,29,31-35,37-40-weka.filters.unsupervised.attribute.Remove-R3-7
+Instances:    347886
+Attributes:   4
+              SEXO
+              NEUMONIA
+              TABAQUISMO
+              CLASIFICACION_FINAL
+Test mode:    evaluate on training data
+
+
+=== Clustering model (full training set) ===
+
+
+kMeans
+======
+
+Number of iterations: 3
+Within cluster sum of squared errors: 10302.0
+
+Initial starting points (k-means++):
+
+Cluster 0: Masculino,NO,NO,'NEGATIVO A SARS-COV-2'
+Cluster 1: Masculino,NO,NO,'CASO DE SARS-COV-2  CONFIRMADO'
+Cluster 2: Femenino,NO,NO,'NEGATIVO A SARS-COV-2'
+Cluster 3: Femenino,NO,NO,'CASO DE SARS-COV-2  CONFIRMADO'
+Cluster 4: Masculino,NO,SI,'CASO DE SARS-COV-2  CONFIRMADO'
+Cluster 5: Masculino,SI,NO,'NEGATIVO A SARS-COV-2'
+Cluster 6: Masculino,NO,SI,'NEGATIVO A SARS-COV-2'
+Cluster 7: Femenino,NO,NO,'CASO SOSPECHOSO'
+Cluster 8: Masculino,NO,NO,'CASO SOSPECHOSO'
+Cluster 9: Femenino,NO,SI,'NEGATIVO A SARS-COV-2'
+Cluster 10: Femenino,SI,NO,'CASO DE COVID-19 CONFIRMADO POR COMITE DE  DICTAMINACION'
+Cluster 11: Masculino,SI,NO,'CASO DE SARS-COV-2  CONFIRMADO'
+Cluster 12: Femenino,NO,SI,'CASO DE SARS-COV-2  CONFIRMADO'
+Cluster 13: Masculino,NO,NO,'CASO DE COVID-19 CONFIRMADO POR ASOCIACION CLINICA EPIDEMIOLOGICA'
+Cluster 14: Femenino,SI,NO,'NEGATIVO A SARS-COV-2'
+
+Missing values globally replaced with mean/mode
+
+Final cluster centroids:
+                                                                                                                                                                                                Cluster#
+Attribute                                                                                                                    Full Data                                                                 0                                                                 1                                                                 2                                                                 3                                                                 4                                                                 5                                                                 6                                                                 7                                                                 8                                                                 9                                                                10                                                                11                                                                12                                                                13                                                                14
+                                                                                                                            (347886.0)                                                        (104931.0)                                                         (29224.0)                                                        (135678.0)                                                         (38573.0)                                                          (3507.0)                                                          (3478.0)                                                          (8135.0)                                                          (5321.0)                                                          (3871.0)                                                          (4636.0)                                                           (257.0)                                                          (5690.0)                                                          (1312.0)                                                           (906.0)                                                          (2367.0)
+====================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================
+SEXO                                                                                                                          Femenino                                                         Masculino                                                         Masculino                                                          Femenino                                                          Femenino                                                         Masculino                                                         Masculino                                                         Masculino                                                          Femenino                                                         Masculino                                                          Femenino                                                          Femenino                                                         Masculino                                                          Femenino                                                         Masculino                                                          Femenino
+NEUMONIA                                                                                                                            NO                                                                NO                                                                NO                                                                NO                                                                NO                                                                NO                                                                SI                                                                NO                                                                NO                                                                NO                                                                NO                                                                SI                                                                SI                                                                NO                                                                NO                                                                SI
+TABAQUISMO                                                                                                                          NO                                                                NO                                                                NO                                                                NO                                                                NO                                                                SI                                                                NO                                                                SI                                                                NO                                                                NO                                                                SI                                                                NO                                                                NO                                                                SI                                                                NO                                                                NO
+CLASIFICACION_FINAL                                                                                              NEGATIVO A SARS-COV-2                                             NEGATIVO A SARS-COV-2                                    CASO DE SARS-COV-2  CONFIRMADO                                             NEGATIVO A SARS-COV-2                                    CASO DE SARS-COV-2  CONFIRMADO                                    CASO DE SARS-COV-2  CONFIRMADO                                             NEGATIVO A SARS-COV-2                                             NEGATIVO A SARS-COV-2                                                   CASO SOSPECHOSO                                                   CASO SOSPECHOSO                                             NEGATIVO A SARS-COV-2                                      NO REALIZADO POR LABORATORIO                                    CASO DE SARS-COV-2  CONFIRMADO                                    CASO DE SARS-COV-2  CONFIRMADO CASO DE COVID-19 CONFIRMADO POR ASOCIACION CLINICA EPIDEMIOLOGICA                                             NEGATIVO A SARS-COV-2
+
+
+
+
+Time taken to build model (full training data) : 1 seconds
+
+=== Model and evaluation on training set ===
+
+Clustered Instances
+
+ 0      104931 ( 30%)
+ 1       29224 (  8%)
+ 2      135678 ( 39%)
+ 3       38573 ( 11%)
+ 4        3507 (  1%)
+ 5        3478 (  1%)
+ 6        8135 (  2%)
+ 7        5321 (  2%)
+ 8        3871 (  1%)
+ 9        4636 (  1%)
+10         257 (  0%)
+11        5690 (  2%)
+12        1312 (  0%)
+13         906 (  0%)
+14        2367 (  1%)
+
+resultado 2:
+=== Run information ===
+
+Scheme:       weka.clusterers.SimpleKMeans -init 1 -max-candidates 100 -periodic-pruning 10000 -min-density 2.0 -t1 -1.25 -t2 -1.0 -N 15 -A "weka.core.EuclideanDistance -R first-last" -I 500 -num-slots 1 -S 20
+Relation:     Morelos_modificado3_completo_sin_asento-weka.filters.unsupervised.attribute.Remove-R1-5,7-14,16-20,24,26-27,29,31-35,37-40
+Instances:    347886
+Attributes:   9
+              SEXO
+              NEUMONIA
+              DIABETES
+              EPOC
+              ASMA
+              HIPERTENSION
+              OBESIDAD
+              TABAQUISMO
+              CLASIFICACION_FINAL
+Test mode:    evaluate on training data
+
+
+=== Clustering model (full training set) ===
+
+
+kMeans
+======
+
+Number of iterations: 4
+Within cluster sum of squared errors: 98216.0
+
+Initial starting points (k-means++):
+
+Cluster 0: Masculino,NO,NO,NO,NO,NO,NO,NO,'NEGATIVO A SARS-COV-2'
+Cluster 1: Femenino,NO,NO,NO,NO,NO,NO,NO,'CASO DE SARS-COV-2  CONFIRMADO'
+Cluster 2: Femenino,NO,NO,NO,NO,SI,NO,NO,'CASO DE SARS-COV-2  CONFIRMADO'
+Cluster 3: Femenino,NO,NO,NO,NO,NO,NO,NO,'NEGATIVO A SARS-COV-2'
+Cluster 4: Femenino,NO,SI,NO,NO,SI,SI,NO,'NEGATIVO A SARS-COV-2'
+Cluster 5: Masculino,SI,NO,NO,NO,SI,SI,NO,'CASO DE SARS-COV-2  CONFIRMADO'
+Cluster 6: Femenino,NO,SI,NO,NO,SI,NO,NO,'NEGATIVO A SARS-COV-2'
+Cluster 7: Masculino,NO,SI,NO,NO,NO,NO,SI,'CASO DE COVID-19 CONFIRMADO POR ASOCIACION CLINICA EPIDEMIOLOGICA'
+Cluster 8: Masculino,NO,NO,NO,NO,NO,NO,SI,'CASO DE SARS-COV-2  CONFIRMADO'
+Cluster 9: Masculino,SI,NO,NO,NO,NO,NO,NO,'CASO DE SARS-COV-2  CONFIRMADO'
+Cluster 10: Masculino,NO,NO,NO,NO,SI,NO,NO,'NEGATIVO A SARS-COV-2'
+Cluster 11: Masculino,NO,NO,NO,NO,NO,NO,NO,'CASO DE SARS-COV-2  CONFIRMADO'
+Cluster 12: Masculino,NO,NO,NO,SI,NO,SI,SI,'CASO DE SARS-COV-2  CONFIRMADO'
+Cluster 13: Masculino,SI,NO,NO,NO,SI,SI,SI,'CASO DE SARS-COV-2  CONFIRMADO'
+Cluster 14: Femenino,SI,NO,NO,NO,NO,NO,NO,'NEGATIVO A SARS-COV-2'
+
+Missing values globally replaced with mean/mode
+
+Final cluster centroids:
+                                                                                                                          Cluster#
+Attribute                                                                                 Full Data                              0                              1                              2                              3                              4                              5                              6                              7                              8                              9                             10                             11                             12                             13                             14
+                                                                                         (347886.0)                     (109741.0)                      (40788.0)                      (13659.0)                     (125435.0)                       (5430.0)                       (2958.0)                       (5253.0)                       (1071.0)                       (2689.0)                       (4235.0)                       (5575.0)                      (26181.0)                       (2307.0)                        (354.0)                       (2210.0)
+====================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================================
+SEXO                                                                                       Femenino                      Masculino                       Femenino                       Femenino                       Femenino                       Femenino                      Masculino                       Femenino                      Masculino                      Masculino                      Masculino                      Masculino                      Masculino                      Masculino                      Masculino                       Femenino
+NEUMONIA                                                                                         NO                             NO                             NO                             NO                             NO                             NO                             SI                             NO                             NO                             NO                             SI                             NO                             NO                             NO                             SI                             SI
+DIABETES                                                                                         NO                             NO                             NO                             NO                             NO                             SI                             NO                             SI                             SI                             NO                             NO                             NO                             NO                             NO                             NO                             NO
+EPOC                                                                                             NO                             NO                             NO                             NO                             NO                             NO                             NO                             NO                             NO                             NO                             NO                             NO                             NO                             NO                             NO                             NO
+ASMA                                                                                             NO                             NO                             NO                             NO                             NO                             NO                             NO                             NO                             NO                             NO                             NO                             NO                             NO                             NO                             NO                             NO
+HIPERTENSION                                                                                     NO                             NO                             NO                             SI                             NO                             SI                             SI                             SI                             NO                             NO                             NO                             SI                             NO                             NO                             SI                             NO
+OBESIDAD                                                                                         NO                             NO                             NO                             NO                             NO                             SI                             NO                             NO                             NO                             NO                             NO                             NO                             NO                             SI                             SI                             NO
+TABAQUISMO                                                                                       NO                             NO                             NO                             NO                             NO                             NO                             NO                             NO                             SI                             SI                             NO                             NO                             NO                             SI                             SI                             NO
+CLASIFICACION_FINAL                                                           NEGATIVO A SARS-COV-2          NEGATIVO A SARS-COV-2 CASO DE SARS-COV-2  CONFIRMADO CASO DE SARS-COV-2  CONFIRMADO          NEGATIVO A SARS-COV-2          NEGATIVO A SARS-COV-2 CASO DE SARS-COV-2  CONFIRMADO          NEGATIVO A SARS-COV-2          NEGATIVO A SARS-COV-2 CASO DE SARS-COV-2  CONFIRMADO CASO DE SARS-COV-2  CONFIRMADO          NEGATIVO A SARS-COV-2 CASO DE SARS-COV-2  CONFIRMADO          NEGATIVO A SARS-COV-2 CASO DE SARS-COV-2  CONFIRMADO          NEGATIVO A SARS-COV-2
+
+
+
+
+Time taken to build model (full training data) : 2.96 seconds
+
+=== Model and evaluation on training set ===
+
+Clustered Instances
+
+ 0      109741 ( 32%)
+ 1       40788 ( 12%)
+ 2       13659 (  4%)
+ 3      125435 ( 36%)
+ 4        5430 (  2%)
+ 5        2958 (  1%)
+ 6        5253 (  2%)
+ 7        1071 (  0%)
+ 8        2689 (  1%)
+ 9        4235 (  1%)
+10        5575 (  2%)
+11       26181 (  8%)
+12        2307 (  1%)
+13         354 (  0%)
+14        2210 (  1%)
+
